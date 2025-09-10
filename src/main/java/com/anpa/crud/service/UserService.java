@@ -2,7 +2,9 @@ package com.anpa.crud.service;
 
 import com.anpa.crud.model.User;
 import com.anpa.crud.repository.UserRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,5 +36,29 @@ public class UserService {
     public String deleteAll() {
         userRepository.deleteAll();
         return "Se han borrado todos los Users";
+    }
+
+    public Optional<User> modifyById(long id, User userDetails) throws ChangeSetPersister.NotFoundException {
+
+        Optional<User> userAntiguo = userRepository.findById(id);
+
+        if (userAntiguo.isPresent()){
+            User user = userAntiguo.get();
+
+            if (userDetails.getName() != null) {
+                user.setName(userDetails.getName());
+
+            } if (userDetails.getLastName() != null) {
+                user.setLastName(userDetails.getLastName());
+
+            } if (userDetails.getLugarResidencia() != null) {
+                user.setLugarResidencia(userDetails.getLugarResidencia());
+            }
+            userRepository.save(user);
+            return Optional.of(user);
+
+        } else {
+            throw new ObjectNotFoundException("No se encontró el User por el siguiente ID : ", id);
+        }
     }
 }

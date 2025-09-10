@@ -3,6 +3,7 @@ package com.anpa.crud.controller;
 import com.anpa.crud.model.User;
 import com.anpa.crud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,5 +40,10 @@ public class UserController {
     @DeleteMapping(path = "/fulldelete")
     public String deleteUserById(){
         return userService.deleteAll();
+    }
+
+    @PatchMapping(path = "/modify/{id}")
+    public Optional<User> modifyById(@PathVariable Long id, @RequestBody User userDetails) throws ChangeSetPersister.NotFoundException {
+        return userService.modifyById(id, userDetails);
     }
 }
