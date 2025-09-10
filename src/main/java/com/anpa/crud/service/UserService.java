@@ -22,8 +22,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> getById(Long id){
+    public Optional<User> getUserById(long id){
         return userRepository.findById(id);
     }
 
+    public String deleteUserById(long id){
+        userRepository.deleteById(id);
+        return "Se ha borrado el usuario con id + " + id;
+    }
+
+    public String deleteAll() {
+        userRepository.deleteAll();
+        return "Se han borrado todos los Users";
+    }
 }
